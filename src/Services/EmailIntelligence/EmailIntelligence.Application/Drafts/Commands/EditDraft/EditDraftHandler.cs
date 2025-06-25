@@ -1,13 +1,12 @@
 using EmailIntelligence.Application.Services;
-using BuildingBlocks.Messaging.Events;
-using MassTransit;
+using EmailIntelligence.Domain.Repositories;
+using BuildingBlocks.CQRS;
 
 namespace EmailIntelligence.Application.Drafts.Commands.EditDraft;
 
 public class EditDraftHandler(
     IEmailDraftRepository draftRepository,
-    ILearningService learningService,
-    IPublishEndpoint publisher)
+    ILearningService learningService)
     : ICommandHandler<EditDraftCommand, EditDraftResult>
 {
     public async Task<EditDraftResult> Handle(EditDraftCommand command, CancellationToken cancellationToken)
@@ -31,18 +30,8 @@ public class EditDraftHandler(
             command.EditTypes,
             cancellationToken);
 
-        // Publish event for other services to learn
-        var learningEvent = new DraftEditedEvent(
-            command.UserId,
-            command.DraftId,
-            originalContent,
-            command.EditedContent,
-            command.EditTypes,
-            DateTime.UtcNow
-        );
+        // TODO: Publish event for other services to learn when MassTransit is properly configured
         
-        await publisher.Publish(learningEvent, cancellationToken);
-
         return new EditDraftResult(command.DraftId, true);
     }
 }

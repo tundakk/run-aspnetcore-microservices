@@ -1,0 +1,401 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EmailIntelligence Service Architecture</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: #333;
+        }
+        
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            padding: 30px;
+        }
+        
+        h1 {
+            text-align: center;
+            color: #2c3e50;
+            margin-bottom: 30px;
+            font-size: 2.5em;
+            border-bottom: 3px solid #3498db;
+            padding-bottom: 15px;
+        }
+        
+        .architecture-diagram {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr 1fr;
+            grid-template-rows: auto auto auto auto;
+            gap: 20px;
+            margin-bottom: 40px;
+        }
+        
+        .layer {
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            transition: transform 0.3s ease;
+        }
+        
+        .layer:hover {
+            transform: translateY(-5px);
+        }
+        
+        .api-layer {
+            background: linear-gradient(135deg, #ff6b6b, #ee5a24);
+            color: white;
+            grid-column: 1 / -1;
+        }
+        
+        .application-layer {
+            background: linear-gradient(135deg, #4834d4, #686de0);
+            color: white;
+            grid-column: 1 / -1;
+        }
+        
+        .domain-layer {
+            background: linear-gradient(135deg, #00d2d3, #54a0ff);
+            color: white;
+            grid-column: 1 / -1;
+        }
+        
+        .infrastructure-layer {
+            background: linear-gradient(135deg, #5f27cd, #341f97);
+            color: white;
+            grid-column: 1 / -1;
+        }
+        
+        .external-services {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 15px;
+            margin-top: 20px;
+        }
+        
+        .external-service {
+            background: linear-gradient(135deg, #26de81, #20bf6b);
+            color: white;
+            padding: 15px;
+            border-radius: 8px;
+            text-align: center;
+        }
+        
+        .workflow {
+            margin-top: 40px;
+            background: #f8f9fa;
+            padding: 25px;
+            border-radius: 10px;
+            border-left: 5px solid #3498db;
+        }
+        
+        .workflow-step {
+            display: flex;
+            align-items: center;
+            margin: 15px 0;
+            padding: 15px;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        
+        .step-number {
+            background: #3498db;
+            color: white;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 15px;
+            font-weight: bold;
+        }
+        
+        .data-entities {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 20px;
+            margin-top: 30px;
+        }
+        
+        .entity {
+            background: linear-gradient(135deg, #fd79a8, #e84393);
+            color: white;
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+        }
+        
+        .api-endpoints {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-top: 20px;
+        }
+        
+        .endpoint {
+            background: #2d3436;
+            color: white;
+            padding: 15px;
+            border-radius: 8px;
+            font-family: 'Courier New', monospace;
+        }
+        
+        .method {
+            color: #00b894;
+            font-weight: bold;
+        }
+        
+        .url {
+            color: #fdcb6e;
+        }
+        
+        .features {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 20px;
+            margin-top: 30px;
+        }
+        
+        .feature {
+            background: linear-gradient(135deg, #a29bfe, #6c5ce7);
+            color: white;
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+        }
+        
+        .feature h4 {
+            margin-top: 0;
+            color: #fff;
+        }
+        
+        .tech-stack {
+            background: #2d3436;
+            color: white;
+            padding: 20px;
+            border-radius: 10px;
+            margin-top: 30px;
+        }
+        
+        .tech-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-top: 15px;
+        }
+        
+        .tech-item {
+            background: #636e72;
+            padding: 10px;
+            border-radius: 5px;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🧠 EmailIntelligence Service Architecture</h1>
+        
+        <div class="architecture-diagram">
+            <!-- API Layer -->
+            <div class="layer api-layer">
+                <h3>🌐 API Layer (EmailIntelligence.API)</h3>
+                <p>REST Endpoints using Carter Framework</p>
+                <div class="api-endpoints">
+                    <div class="endpoint">
+                        <span class="method">POST</span> <span class="url">/emails/process</span><br>
+                        Process & categorize emails
+                    </div>
+                    <div class="endpoint">
+                        <span class="method">GET</span> <span class="url">/emails/filtered</span><br>
+                        Retrieve filtered emails
+                    </div>
+                    <div class="endpoint">
+                        <span class="method">POST</span> <span class="url">/drafts/generate</span><br>
+                        Generate AI draft responses
+                    </div>
+                    <div class="endpoint">
+                        <span class="method">PUT</span> <span class="url">/drafts/{id}/edit</span><br>
+                        Edit and learn from drafts
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Application Layer -->
+            <div class="layer application-layer">
+                <h3>⚙️ Application Layer (EmailIntelligence.Application)</h3>
+                <p>Business Logic & CQRS Pattern</p>
+                <ul style="text-align: left; display: inline-block;">
+                    <li><strong>Commands:</strong> ProcessEmailCommand, GenerateDraftCommand</li>
+                    <li><strong>Queries:</strong> GetFilteredEmailsQuery</li>
+                    <li><strong>Handlers:</strong> ProcessEmailHandler, etc.</li>
+                    <li><strong>Services:</strong> IEmailAnalysisService, IDraftGenerationService</li>
+                    <li><strong>Events:</strong> EmailProcessedEvent</li>
+                </ul>
+            </div>
+            
+            <!-- Domain Layer -->
+            <div class="layer domain-layer">
+                <h3>🏛️ Domain Layer (EmailIntelligence.Domain)</h3>
+                <p>Core Business Entities & Rules</p>
+                <div class="data-entities">
+                    <div class="entity">
+                        <h4>ProcessedEmail</h4>
+                        <p>AI-analyzed email with classifications</p>
+                    </div>
+                    <div class="entity">
+                        <h4>EmailDraft</h4>
+                        <p>AI-generated response drafts</p>
+                    </div>
+                    <div class="entity">
+                        <h4>UserToneProfile</h4>
+                        <p>User's writing style preferences</p>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Infrastructure Layer -->
+            <div class="layer infrastructure-layer">
+                <h3>🔧 Infrastructure Layer (EmailIntelligence.Infrastructure)</h3>
+                <p>Data Access & External Services</p>
+                <div class="external-services">
+                    <div class="external-service">
+                        <h4>🤖 LLM API</h4>
+                        <p>OpenAI-compatible AI service for email analysis</p>
+                    </div>
+                    <div class="external-service">
+                        <h4>🗄️ PostgreSQL</h4>
+                        <p>Primary database for email data</p>
+                    </div>
+                    <div class="external-service">
+                        <h4>📨 MassTransit</h4>
+                        <p>Event publishing & messaging</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="workflow">
+            <h2>🔄 Email Processing Workflow</h2>
+            
+            <div class="workflow-step">
+                <div class="step-number">1</div>
+                <div>
+                    <strong>Email Arrives:</strong> External system sends email data to <code>POST /emails/process</code>
+                </div>
+            </div>
+            
+            <div class="workflow-step">
+                <div class="step-number">2</div>
+                <div>
+                    <strong>Duplicate Check:</strong> System checks if email was already processed using EmailId
+                </div>
+            </div>
+            
+            <div class="workflow-step">
+                <div class="step-number">3</div>
+                <div>
+                    <strong>AI Analysis:</strong> LLM analyzes email content to determine priority, category, and action items
+                </div>
+            </div>
+            
+            <div class="workflow-step">
+                <div class="step-number">4</div>
+                <div>
+                    <strong>Entity Creation:</strong> ProcessedEmail entity created with AI classifications and confidence scores
+                </div>
+            </div>
+            
+            <div class="workflow-step">
+                <div class="step-number">5</div>
+                <div>
+                    <strong>Data Persistence:</strong> Email analysis results stored in PostgreSQL database
+                </div>
+            </div>
+            
+            <div class="workflow-step">
+                <div class="step-number">6</div>
+                <div>
+                    <strong>Event Publishing:</strong> EmailProcessedEvent published to message bus for other microservices
+                </div>
+            </div>
+            
+            <div class="workflow-step">
+                <div class="step-number">7</div>
+                <div>
+                    <strong>Response:</strong> API returns analysis results including priority, category, and action items
+                </div>
+            </div>
+        </div>
+        
+        <div class="features">
+            <div class="feature">
+                <h4>🎯 Smart Classification</h4>
+                <ul style="text-align: left;">
+                    <li>Priority: Low → Critical</li>
+                    <li>Category: 10+ types</li>
+                    <li>Response requirements</li>
+                    <li>Keyword extraction</li>
+                    <li>Action item identification</li>
+                </ul>
+            </div>
+            
+            <div class="feature">
+                <h4>📝 AI Draft Generation</h4>
+                <ul style="text-align: left;">
+                    <li>Context-aware responses</li>
+                    <li>User tone adaptation</li>
+                    <li>Learning from edits</li>
+                    <li>Quality scoring</li>
+                    <li>Multiple draft iterations</li>
+                </ul>
+            </div>
+            
+            <div class="feature">
+                <h4>🧠 Continuous Learning</h4>
+                <ul style="text-align: left;">
+                    <li>User correction tracking</li>
+                    <li>Feedback incorporation</li>
+                    <li>Tone profile building</li>
+                    <li>Confidence improvement</li>
+                    <li>Performance metrics</li>
+                </ul>
+            </div>
+        </div>
+        
+        <div class="tech-stack">
+            <h2>🛠️ Technology Stack</h2>
+            <div class="tech-grid">
+                <div class="tech-item"><strong>Framework:</strong> ASP.NET Core 8.0</div>
+                <div class="tech-item"><strong>API:</strong> Carter (Minimal APIs)</div>
+                <div class="tech-item"><strong>Architecture:</strong> Clean Architecture</div>
+                <div class="tech-item"><strong>Pattern:</strong> CQRS + MediatR</div>
+                <div class="tech-item"><strong>Database:</strong> PostgreSQL + EF Core</div>
+                <div class="tech-item"><strong>AI/ML:</strong> LLM Integration</div>
+                <div class="tech-item"><strong>Messaging:</strong> MassTransit</div>
+                <div class="tech-item"><strong>Validation:</strong> FluentValidation</div>
+                <div class="tech-item"><strong>Containerization:</strong> Docker</div>
+                <div class="tech-item"><strong>Health Checks:</strong> Built-in</div>
+                <div class="tech-item"><strong>Logging:</strong> Structured Logging</div>
+                <div class="tech-item"><strong>DI:</strong> Microsoft DI Container</div>
+            </div>
+        </div>
+        
+        <div style="margin-top: 40px; text-align: center; color: #7f8c8d;">
+            <p><em>EmailIntelligence Service - AI-Powered Email Processing & Response Generation</em></p>
+            <p>Part of the ASP.NET Core Microservices Architecture</p>
+        </div>
+    </div>
+</body>
+</html>

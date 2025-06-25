@@ -1,0 +1,119 @@
+name: Deploy EmailIntelligence to Azure
+
+on:
+  push:
+    branches: [ main, develop ]
+    paths:
+      - 'src/Services/EmailIntelligence/**'
+      - 'azure-deployment/**'
+      - '.github/workflows/deploy-emailintelligence.yml'
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: 'Environment to deploy to'
+        required: true
+        default: 'dev'
+        type: choice
+        options:
+        - dev
+        - staging
+        - prod
+
+env:
+  AZURE_RESOURCE_GROUP: rg-emailintelligence-${{ github.event.inputs.environment || 'dev' }}
+  AZURE_LOCATION: eastus
+  CONTAINER_APP_NAME: ca-emailintelligence-api-${{ github.event.inputs.environment || 'dev' }}
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Set up .NET
+      uses: actions/setup-dotnet@v3
+      with:
+        dotnet-version: '8.0.x'
+
+    - name: Login to Azure
+      uses: azure/login@v1
+      with:
+        creds: ${{ secrets.AZURE_CREDENTIALS }}
+
+    - name: Set up Docker Buildx
+      uses: docker/setup-buildx-action@v3
+
+    - name: Build .NET project
+      run: |
+        cd src/Services/EmailIntelligence
+        dotnet restore
+        dotnet build --configuration Release --no-restore
+        dotnet test --no-build --verbosity normal
+
+    - name: Get Container Registry details
+      id: acr-details
+      run: |
+        REGISTRY_NAME=$(az deployment group show \
+          --resource-group ${{ env.AZURE_RESOURCE_GROUP }} \
+          --name $(az deployment group list --resource-group ${{ env.AZURE_RESOURCE_GROUP }} --query "[?contains(name, 'emailintelligence-deployment')].name | [0]" -o tsv) \
+          --query "properties.outputs.containerRegistryName.value" -o tsv)
+        
+        REGISTRY_SERVER=$(az acr show --name $REGISTRY_NAME --query "loginServer" -o tsv)
+        
+        echo "registry-name=$REGISTRY_NAME" >> $GITHUB_OUTPUT
+        echo "registry-server=$REGISTRY_SERVER" >> $GITHUB_OUTPUT
+
+    - name: Login to Azure Container Registry
+      run: |
+        az acr login --name ${{ steps.acr-details.outputs.registry-name }}
+
+    - name: Build and push Docker image
+      run: |
+        cd src/Services/EmailIntelligence
+        
+        IMAGE_TAG=${{ steps.acr-details.outputs.registry-server }}/emailintelligence-api:${{ github.sha }}
+        IMAGE_LATEST=${{ steps.acr-details.outputs.registry-server }}/emailintelligence-api:latest
+        
+        docker build -t $IMAGE_TAG -t $IMAGE_LATEST -f EmailIntelligence.API/Dockerfile .
+        docker push $IMAGE_TAG
+        docker push $IMAGE_LATEST
+
+    - name: Deploy to Azure Container Apps
+      run: |
+        az containerapp update \
+          --name ${{ env.CONTAINER_APP_NAME }} \
+          --resource-group ${{ env.AZURE_RESOURCE_GROUP }} \
+          --image ${{ steps.acr-details.outputs.registry-server }}/emailintelligence-api:${{ github.sha }}
+
+    - name: Verify deployment
+      run: |
+        APP_URL=$(az containerapp show \
+          --name ${{ env.CONTAINER_APP_NAME }} \
+          --resource-group ${{ env.AZURE_RESOURCE_GROUP }} \
+          --query "properties.configuration.ingress.fqdn" -o tsv)
+        
+        echo "Application deployed to: https://$APP_URL"
+        
+        # Wait for the app to be ready
+        sleep 60
+        
+        # Test health endpoint
+        curl -f "https://$APP_URL/health" || exit 1
+        
+        echo "Health check passed!"
+
+    - name: Post deployment summary
+      run: |
+        APP_URL=$(az containerapp show \
+          --name ${{ env.CONTAINER_APP_NAME }} \
+          --resource-group ${{ env.AZURE_RESOURCE_GROUP }} \
+          --query "properties.configuration.ingress.fqdn" -o tsv)
+        
+        echo "## Deployment Summary" >> $GITHUB_STEP_SUMMARY
+        echo "- **Environment**: ${{ github.event.inputs.environment || 'dev' }}" >> $GITHUB_STEP_SUMMARY
+        echo "- **Application URL**: https://$APP_URL" >> $GITHUB_STEP_SUMMARY
+        echo "- **Resource Group**: ${{ env.AZURE_RESOURCE_GROUP }}" >> $GITHUB_STEP_SUMMARY
+        echo "- **Container App**: ${{ env.CONTAINER_APP_NAME }}" >> $GITHUB_STEP_SUMMARY
+        echo "- **Image**: ${{ steps.acr-details.outputs.registry-server }}/emailintelligence-api:${{ github.sha }}" >> $GITHUB_STEP_SUMMARY

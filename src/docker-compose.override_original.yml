@@ -30,6 +30,7 @@ services:
     restart: always
     ports:
       - "6379:6379"
+
   orderdb:
     container_name: orderdb
     environment:
@@ -38,19 +39,6 @@ services:
     restart: always
     ports:
       - "1433:1433"
-
-  emailintelligencedb:
-    container_name: emailintelligencedb
-    environment:
-      - POSTGRES_USER=postgres
-      - POSTGRES_PASSWORD=postgres
-      - POSTGRES_DB=EmailIntelligenceDb
-    restart: always
-    ports:
-      - "5434:5432"
-    volumes:
-      - postgres_emailintelligence:/var/lib/postgresql/data/
-      - ./Services/EmailIntelligence/init-db.sql:/docker-entrypoint-initdb.d/init-db.sql
 
   messagebroker:
     container_name: messagebroker
@@ -100,6 +88,7 @@ services:
     volumes:
       - ${APPDATA}/Microsoft/UserSecrets:/home/app/.microsoft/usersecrets:ro
       - ${APPDATA}/ASP.NET/Https:/home/app/.aspnet/https:ro
+
   discount.grpc:
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
@@ -132,34 +121,7 @@ services:
     volumes:
       - ${APPDATA}/Microsoft/UserSecrets:/home/app/.microsoft/usersecrets:ro
       - ${APPDATA}/ASP.NET/Https:/home/app/.aspnet/https:ro
-  emailintelligence.api:
-    environment:
-      - ASPNETCORE_ENVIRONMENT=Development
-      - ASPNETCORE_HTTP_PORTS=8080
-      - DOTNET_USE_POLLING_FILE_WATCHER=1
-      - NUGET_FALLBACK_PACKAGES=/root/.nuget/fallbackpackages
-      - ConnectionStrings__Database=Server=emailintelligencedb;Port=5432;Database=EmailIntelligenceDb;User Id=postgres;Password=postgres;Include Error Detail=true
-      - MessageBroker__Host=amqp://ecommerce-mq:5672
-      - MessageBroker__UserName=guest
-      - MessageBroker__Password=guest
-      - LLMSettings__ApiKey=your-openai-api-key-here
-      - LLMSettings__BaseUrl=https://api.openai.com
-      - LLMSettings__Model=gpt-3.5-turbo
-      - LLMSettings__MaxTokens=800
-      - LLMSettings__Temperature=0.7
-      - LLMSettings__TimeoutSeconds=45
-      - LLMSettings__MaxRetries=3
-      - LLMSettings__EnableCaching=true
-      - LLMSettings__CacheExpirationMinutes=60
-    depends_on:
-      - emailintelligencedb
-      - messagebroker
-    ports:
-      - "6006:8080"
-      - "6007:8081"  # Add HTTPS port if needed
-    volumes:
-      - ${APPDATA}/Microsoft/UserSecrets:/home/app/.microsoft/usersecrets:ro
-      - ${APPDATA}/ASP.NET/Https:/home/app/.aspnet/https:ro
+
   yarpapigateway:
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
@@ -169,7 +131,6 @@ services:
       - catalog.api
       - basket.api
       - ordering.api
-      - emailintelligence.api
     ports:
       - "6004:8080"
       - "6064:8081"
@@ -191,8 +152,3 @@ services:
     volumes:
       - ${APPDATA}/Microsoft/UserSecrets:/home/app/.microsoft/usersecrets:ro
       - ${APPDATA}/ASP.NET/Https:/home/app/.aspnet/https:ro
-
-volumes:
-  postgres_catalog:
-  postgres_basket:
-  postgres_emailintelligence:

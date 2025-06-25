@@ -1,0 +1,689 @@
+{
+  "_type": "export",
+  "__export_format": 4,
+  "__export_date": "2025-06-24T14:30:00.000Z",
+  "__export_source": "insomnia.desktop.app:v2023.5.8",
+  "resources": [
+    {      "_id": "req_emailintelligence_workflow_guide",
+      "parentId": "fld_emailintelligence",
+      "modified": 1719240500000,
+      "created": 1719240500000,
+      "url": "{{ base_url }}/health",
+      "name": "🔧 WORKFLOW GUIDE - Read First!",
+      "description": "WORKFLOW GUIDE:\n\n🚀 QUICK START:\n1. START HERE: Test service health (this endpoint)\n2. Process emails using the 'Process [Type] Email' requests\n3. Copy the 'ProcessedEmailId' from the response JSON\n4. Paste it into draft generation requests (replace the GUID)\n5. View filtered emails to see processed results\n6. Generate drafts for emails that require responses\n\n📋 REQUIRED FIELDS:\n- ProcessEmailCommand: EmailId, UserId, Subject, From (valid email), To (valid email), Body, ReceivedAt\n- GenerateDraftCommand: ProcessedEmailId (GUID from step 2), UserId\n\n🔧 TROUBLESHOOTING:\n- If you get validation errors, ensure all required fields are present\n- For draft generation, you MUST use a ProcessedEmailId from a previously processed email\n- Check that email addresses are in valid format (e.g., user@domain.com)\n- If filtered emails return empty, it may be a database issue - but email processing and draft generation still work!\n- IMPORTANT: Make sure you have 'Base Environment' selected in Insomnia!\n\n🌐 ENVIRONMENT SETUP:\n- Select 'Base Environment' from the environment dropdown\n- Verify these variables are set (without {{ }} in the values):\n  * base_url: http://localhost:6006\n  * yarp_url: http://localhost:6004\n  * processedEmailId: (leave empty initially)\n  * draftId: (leave empty initially)\n\n💡 WORKING EXAMPLE:\n1. Run 'Process Urgent Email' → get ProcessedEmailId (e.g., '2856ad17-e179-417b-9593-fd16b34362ef')\n2. Use that ID in 'Generate Draft Response' request\n3. See the AI-generated response!\n\n⚠️ NOTE: The database might not persist between container restarts, but the AI processing and draft generation work perfectly!",
+      "method": "GET",
+      "body": {},
+      "parameters": [],
+      "headers": [],
+      "authentication": {},
+      "metaSortKey": -1719240500000,
+      "isPrivate": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global",
+      "_type": "request"
+    },
+    {      "_id": "req_emailintelligence_process_urgent",
+      "parentId": "fld_emailintelligence",
+      "modified": 1719240600000,
+      "created": 1719240600000,
+      "url": "{{ base_url }}/emails/process",
+      "name": "Process Urgent Email",
+      "description": "Process an urgent server maintenance email",
+      "method": "POST",
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"EmailId\": \"email-001\",\n  \"UserId\": \"user-123\",\n  \"Subject\": \"URGENT: Server downtime scheduled for tonight\",\n  \"From\": \"admin@company.com\",\n  \"To\": \"team@company.com\",\n  \"Body\": \"Hi Team,\\n\\nWe have scheduled a critical server maintenance tonight from 11 PM to 3 AM. Please save your work and log off before 11 PM. This is urgent and cannot be postponed.\\n\\nThanks,\\nIT Admin\",\n  \"ReceivedAt\": \"2025-06-24T14:30:00Z\"\n}"
+      },
+      "parameters": [],
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        }
+      ],
+      "authentication": {},
+      "metaSortKey": -1719240600000,
+      "isPrivate": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global",
+      "_type": "request"
+    },
+    {
+      "_id": "req_emailintelligence_process_marketing",
+      "parentId": "fld_emailintelligence",
+      "modified": 1719240650000,
+      "created": 1719240650000,
+      "url": "{{ base_url }}/emails/process",
+      "name": "Process Marketing Email",
+      "description": "Process a marketing promotional email",
+      "method": "POST",
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"EmailId\": \"email-002\",\n  \"UserId\": \"user-123\",\n  \"Subject\": \"50% Off Summer Sale - Don't Miss Out!\",\n  \"From\": \"marketing@store.com\",\n  \"To\": \"customer@email.com\",\n  \"Body\": \"Dear Valued Customer,\\n\\nOur biggest summer sale is here! Get 50% off on all items. Use code SUMMER50 at checkout. Sale ends soon!\\n\\nShop now and save big!\\n\\nBest regards,\\nMarketing Team\",\n  \"ReceivedAt\": \"2025-06-24T10:15:00Z\"\n}"
+      },
+      "parameters": [],
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        }
+      ],
+      "authentication": {},
+      "metaSortKey": -1719240650000,
+      "isPrivate": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global",
+      "_type": "request"
+    },
+    {
+      "_id": "req_emailintelligence_process_meeting",
+      "parentId": "fld_emailintelligence",
+      "modified": 1719240700000,
+      "created": 1719240700000,
+      "url": "{{ base_url }}/emails/process",
+      "name": "Process Meeting Request",
+      "description": "Process a meeting request email",
+      "method": "POST",
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"EmailId\": \"email-003\",\n  \"UserId\": \"user-123\",\n  \"Subject\": \"Meeting Request: Q3 Budget Review\",\n  \"From\": \"manager@company.com\",\n  \"To\": \"team-leads@company.com\",\n  \"Body\": \"Hi Team Leads,\\n\\nI'd like to schedule a meeting to review our Q3 budget and discuss upcoming projects. Please let me know your availability for next week.\\n\\nProposed times:\\n- Tuesday 2 PM\\n- Wednesday 10 AM\\n- Thursday 3 PM\\n\\nPlease respond with your preference.\\n\\nBest,\\nSarah\",\n  \"ReceivedAt\": \"2025-06-24T09:45:00Z\"\n}"
+      },
+      "parameters": [],
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        }
+      ],
+      "authentication": {},
+      "metaSortKey": -1719240700000,
+      "isPrivate": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global",
+      "_type": "request"
+    },
+    {
+      "_id": "req_emailintelligence_process_support",
+      "parentId": "fld_emailintelligence",
+      "modified": 1719240750000,
+      "created": 1719240750000,
+      "url": "{{ base_url }}/emails/process",
+      "name": "Process Support Ticket",
+      "description": "Process a customer support ticket email",
+      "method": "POST",
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"EmailId\": \"email-004\",\n  \"UserId\": \"user-123\",\n  \"Subject\": \"Login Issues - Need Help ASAP\",\n  \"From\": \"customer@client.com\",\n  \"To\": \"support@company.com\",\n  \"Body\": \"Hello Support Team,\\n\\nI'm having trouble logging into my account for the past 2 hours. I've tried resetting my password but I'm not receiving the reset email. This is affecting my work and I need this resolved urgently.\\n\\nMy account email: customer@client.com\\nLast successful login: Yesterday around 3 PM\\n\\nPlease help!\\n\\nThanks,\\nJohn\",\n  \"ReceivedAt\": \"2025-06-24T11:30:00Z\"\n}"
+      },
+      "parameters": [],
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        }
+      ],
+      "authentication": {},
+      "metaSortKey": -1719240750000,
+      "isPrivate": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global",
+      "_type": "request"
+    },
+    {
+      "_id": "req_emailintelligence_filtered_all",
+      "parentId": "fld_emailintelligence",
+      "modified": 1719240800000,
+      "created": 1719240800000,
+      "url": "{{ base_url }}/emails/filtered",
+      "name": "Get All Filtered Emails",
+      "description": "Retrieve all emails for a user with pagination",
+      "method": "GET",
+      "body": {},
+      "parameters": [
+        {
+          "name": "UserId",
+          "value": "user-123"
+        },
+        {
+          "name": "Page",
+          "value": "1"
+        },
+        {
+          "name": "PageSize",
+          "value": "10"
+        }
+      ],
+      "headers": [],
+      "authentication": {},
+      "metaSortKey": -1719240800000,
+      "isPrivate": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global",
+      "_type": "request"
+    },
+    {
+      "_id": "req_emailintelligence_filtered_high_priority",
+      "parentId": "fld_emailintelligence",
+      "modified": 1719240850000,
+      "created": 1719240850000,
+      "url": "{{ base_url }}/emails/filtered",
+      "name": "Get High Priority Emails",
+      "description": "Retrieve only high priority emails (Priority = 2)",
+      "method": "GET",
+      "body": {},
+      "parameters": [
+        {
+          "name": "UserId",
+          "value": "user-123"
+        },
+        {
+          "name": "Priority",
+          "value": "2",
+          "description": "High Priority (0=Low, 1=Medium, 2=High, 3=Critical)"
+        },
+        {
+          "name": "Page",
+          "value": "1"
+        },
+        {
+          "name": "PageSize",
+          "value": "10"
+        }
+      ],
+      "headers": [],
+      "authentication": {},
+      "metaSortKey": -1719240850000,
+      "isPrivate": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global",
+      "_type": "request"
+    },
+    {
+      "_id": "req_emailintelligence_filtered_critical",
+      "parentId": "fld_emailintelligence",
+      "modified": 1719240900000,
+      "created": 1719240900000,
+      "url": "{{ base_url }}/emails/filtered",
+      "name": "Get Critical Priority Emails",
+      "description": "Retrieve only critical priority emails (Priority = 3)",
+      "method": "GET",
+      "body": {},
+      "parameters": [
+        {
+          "name": "UserId",
+          "value": "user-123"
+        },
+        {
+          "name": "Priority",
+          "value": "3",
+          "description": "Critical Priority (0=Low, 1=Medium, 2=High, 3=Critical)"
+        },
+        {
+          "name": "Page",
+          "value": "1"
+        },
+        {
+          "name": "PageSize",
+          "value": "10"
+        }
+      ],
+      "headers": [],
+      "authentication": {},
+      "metaSortKey": -1719240900000,
+      "isPrivate": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global",
+      "_type": "request"
+    },
+    {
+      "_id": "req_emailintelligence_filtered_requires_response",
+      "parentId": "fld_emailintelligence",
+      "modified": 1719240950000,
+      "created": 1719240950000,
+      "url": "{{ base_url }}/emails/filtered",
+      "name": "Get Emails Requiring Response",
+      "description": "Retrieve emails that require a response",
+      "method": "GET",
+      "body": {},
+      "parameters": [
+        {
+          "name": "UserId",
+          "value": "user-123"
+        },
+        {
+          "name": "RequiresResponse",
+          "value": "true"
+        },
+        {
+          "name": "Page",
+          "value": "1"
+        },
+        {
+          "name": "PageSize",
+          "value": "10"
+        }
+      ],
+      "headers": [],
+      "authentication": {},
+      "metaSortKey": -1719240950000,
+      "isPrivate": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global",
+      "_type": "request"
+    },
+    {
+      "_id": "req_emailintelligence_filtered_meeting",
+      "parentId": "fld_emailintelligence",
+      "modified": 1719241000000,
+      "created": 1719241000000,
+      "url": "{{ base_url }}/emails/filtered",
+      "name": "Get Meeting Category Emails",
+      "description": "Retrieve emails categorized as meetings (Category = 4)",
+      "method": "GET",
+      "body": {},
+      "parameters": [
+        {
+          "name": "UserId",
+          "value": "user-123"
+        },
+        {
+          "name": "Category",
+          "value": "4",
+          "description": "Meeting Category (1=RequiresResponse, 2=Informational, 3=ActionRequired, 4=Meeting, 5=Support, 6=Marketing, 7=Newsletter, 8=Spam, 9=Personal, 10=Internal)"
+        },
+        {
+          "name": "Page",
+          "value": "1"
+        },
+        {
+          "name": "PageSize",
+          "value": "10"
+        }
+      ],
+      "headers": [],
+      "authentication": {},
+      "metaSortKey": -1719241000000,
+      "isPrivate": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global",
+      "_type": "request"
+    },
+    {
+      "_id": "req_emailintelligence_filtered_support",
+      "parentId": "fld_emailintelligence",
+      "modified": 1719241050000,
+      "created": 1719241050000,
+      "url": "{{ base_url }}/emails/filtered",
+      "name": "Get Support Category Emails",
+      "description": "Retrieve emails categorized as support (Category = 5)",
+      "method": "GET",
+      "body": {},
+      "parameters": [
+        {
+          "name": "UserId",
+          "value": "user-123"
+        },
+        {
+          "name": "Category",
+          "value": "5",
+          "description": "Support Category"
+        },
+        {
+          "name": "Page",
+          "value": "1"
+        },
+        {
+          "name": "PageSize",
+          "value": "10"
+        }
+      ],
+      "headers": [],
+      "authentication": {},
+      "metaSortKey": -1719241050000,
+      "isPrivate": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global",
+      "_type": "request"
+    },
+    {
+      "_id": "req_emailintelligence_generate_draft",
+      "parentId": "fld_emailintelligence_drafts",
+      "modified": 1719241100000,
+      "created": 1719241100000,
+      "url": "{{ base_url }}/drafts/generate",
+      "name": "Generate Draft Response",
+      "description": "Generate an AI draft response for a processed email. NOTE: You must first process an email and copy the ProcessedEmailId from the response to use here.",
+      "method": "POST",
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"ProcessedEmailId\": \"2856ad17-e179-417b-9593-fd16b34362ef\",\n  \"UserId\": \"user-123\",\n  \"AdditionalContext\": \"Please keep the response professional and acknowledge the urgency. Mention that we will coordinate with the team and provide an estimated timeline.\"\n}"
+      },
+      "parameters": [],
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        }
+      ],
+      "authentication": {},
+      "metaSortKey": -1719241100000,
+      "isPrivate": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global",
+      "_type": "request"
+    },
+    {
+      "_id": "req_emailintelligence_generate_draft_meeting",
+      "parentId": "fld_emailintelligence_drafts",
+      "modified": 1719241150000,
+      "created": 1719241150000,
+      "url": "{{ base_url }}/drafts/generate",
+      "name": "Generate Meeting Response Draft",
+      "description": "Generate a draft response for meeting requests. NOTE: You must first process an email and copy the ProcessedEmailId from the response to use here.",
+      "method": "POST",
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"ProcessedEmailId\": \"00000000-0000-0000-0000-000000000000\",\n  \"UserId\": \"user-123\",\n  \"AdditionalContext\": \"Please confirm attendance and suggest Tuesday 2 PM as the preferred time. Mention that I'll prepare the Q3 budget summary beforehand.\"\n}"
+      },
+      "parameters": [],
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        }
+      ],
+      "authentication": {},
+      "metaSortKey": -1719241150000,
+      "isPrivate": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global",
+      "_type": "request"
+    },
+    {
+      "_id": "req_emailintelligence_edit_draft",
+      "parentId": "fld_emailintelligence_drafts",
+      "modified": 1719241200000,
+      "created": 1719241200000,
+      "url": "{{ base_url }}/drafts/{{ draftId }}/edit",
+      "name": "Edit Draft",
+      "description": "Edit a generated draft and record user feedback for learning",
+      "method": "PUT",
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"UserId\": \"user-123\",\n  \"EditedContent\": \"Thank you for the notification about the server maintenance. I've informed my team and we'll ensure all work is saved before 11 PM tonight. We appreciate the advance notice and understand the critical nature of this maintenance.\\n\\nWe'll coordinate with our team leads to ensure a smooth transition and will be available if any issues arise during the maintenance window.\\n\\nBest regards,\\nTeam Lead\",\n  \"EditTypes\": [\"tone\", \"content\", \"structure\"]\n}"
+      },
+      "parameters": [],
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        }
+      ],
+      "authentication": {},
+      "metaSortKey": -1719241200000,
+      "isPrivate": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global",
+      "_type": "request"
+    },
+    {
+      "_id": "req_emailintelligence_health",
+      "parentId": "fld_emailintelligence",
+      "modified": 1719241250000,
+      "created": 1719241250000,
+      "url": "{{ base_url }}/health",
+      "name": "Health Check",
+      "description": "Check EmailIntelligence service health status",
+      "method": "GET",
+      "body": {},
+      "parameters": [],
+      "headers": [],
+      "authentication": {},
+      "metaSortKey": -1719241250000,
+      "isPrivate": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global",
+      "_type": "request"
+    },
+    {
+      "_id": "req_emailintelligence_yarp_health",
+      "parentId": "fld_emailintelligence_yarp",
+      "modified": 1719241300000,
+      "created": 1719241300000,
+      "url": "{{ yarp_url }}/emailintelligence-service/health",
+      "name": "Health Check (via YARP)",
+      "description": "Check EmailIntelligence service health status through YARP API Gateway",
+      "method": "GET",
+      "body": {},
+      "parameters": [],
+      "headers": [],
+      "authentication": {},
+      "metaSortKey": -1719241300000,
+      "isPrivate": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global",
+      "_type": "request"
+    },
+    {
+      "_id": "req_emailintelligence_yarp_process_urgent",
+      "parentId": "fld_emailintelligence_yarp",
+      "modified": 1719241350000,
+      "created": 1719241350000,
+      "url": "{{ yarp_url }}/emailintelligence-service/emails/process",
+      "name": "Process Urgent Email (via YARP)",
+      "description": "Process an urgent server maintenance email through YARP API Gateway",
+      "method": "POST",
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"EmailId\": \"email-yarp-001\",\n  \"UserId\": \"user-123\",\n  \"Subject\": \"URGENT: Database server critical alert\",\n  \"From\": \"alerts@company.com\",\n  \"To\": \"dba-team@company.com\",\n  \"Body\": \"CRITICAL ALERT: Database server DB-PROD-01 is experiencing high CPU usage (98%) and slow response times. Immediate attention required to prevent system outage.\\n\\nDetails:\\n- Server: DB-PROD-01\\n- CPU: 98%\\n- Memory: 87%\\n- Active Connections: 450/500\\n- Response Time: 15 seconds (normal: <1s)\\n\\nActions needed immediately!\",\n  \"ReceivedAt\": \"2025-06-24T15:00:00Z\"\n}"
+      },
+      "parameters": [],
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        }
+      ],
+      "authentication": {},
+      "metaSortKey": -1719241350000,
+      "isPrivate": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global",
+      "_type": "request"
+    },
+    {
+      "_id": "req_emailintelligence_yarp_generate_draft",
+      "parentId": "fld_emailintelligence_yarp",
+      "modified": 1719241400000,
+      "created": 1719241400000,
+      "url": "{{ yarp_url }}/emailintelligence-service/drafts/generate",
+      "name": "Generate Draft Response (via YARP)",
+      "description": "Generate an AI draft response through YARP API Gateway. NOTE: Update ProcessedEmailId with real value from email processing.",
+      "method": "POST",
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"ProcessedEmailId\": \"aaad8389-dd53-4e93-bfbd-b4052cd08ed4\",\n  \"UserId\": \"user-123\",\n  \"AdditionalContext\": \"Please provide immediate action steps and escalation procedures. Mention that we're implementing emergency protocols.\"\n}"
+      },
+      "parameters": [],
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        }
+      ],
+      "authentication": {},
+      "metaSortKey": -1719241400000,
+      "isPrivate": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global",
+      "_type": "request"
+    },
+    {
+      "_id": "fld_emailintelligence_yarp",
+      "parentId": "wrk_emailintelligence_workspace",
+      "modified": 1719241250000,
+      "created": 1719241250000,      "name": "🌐 YARP API Gateway",
+      "description": "EmailIntelligence endpoints through YARP API Gateway (port 6004)",
+      "environment": {},
+      "environmentPropertyOrder": null,
+      "metaSortKey": -1719241250000,
+      "_type": "request_group"
+    },
+    {
+      "_id": "fld_emailintelligence",
+      "parentId": "wrk_emailintelligence_workspace",
+      "modified": 1719240500000,
+      "created": 1719240500000,
+      "name": "📧 Email Processing",
+      "description": "Email analysis and classification endpoints",
+      "environment": {},
+      "environmentPropertyOrder": null,
+      "metaSortKey": -1719240500000,
+      "_type": "request_group"
+    },
+    {
+      "_id": "fld_emailintelligence_drafts",
+      "parentId": "wrk_emailintelligence_workspace",
+      "modified": 1719240550000,
+      "created": 1719240550000,
+      "name": "✍️ Draft Generation",
+      "description": "AI draft generation and editing endpoints",
+      "environment": {},
+      "environmentPropertyOrder": null,
+      "metaSortKey": -1719240550000,
+      "_type": "request_group"
+    },
+    {
+      "_id": "wrk_emailintelligence_workspace",
+      "parentId": null,
+      "modified": 1719240400000,
+      "created": 1719240400000,
+      "name": "🧠 EmailIntelligence Service",
+      "description": "AI-powered email processing and response generation service",
+      "scope": "collection",
+      "_type": "workspace"
+    },
+    {
+      "_id": "env_emailintelligence_base",
+      "parentId": "wrk_emailintelligence_workspace",
+      "modified": 1719240300000,
+      "created": 1719240300000,
+      "name": "Base Environment",
+      "data": {
+        "base_url": "http://localhost:6006",
+        "yarp_url": "http://localhost:6004",
+        "processedEmailId": "",
+        "draftId": ""
+      },
+      "dataPropertyOrder": {
+        "&": [
+          "base_url",
+          "yarp_url",
+          "processedEmailId",
+          "draftId"
+        ]
+      },
+      "color": null,
+      "isPrivate": false,
+      "metaSortKey": 1719240300000,
+      "_type": "environment"
+    },
+    {
+      "_id": "env_emailintelligence_docker",
+      "parentId": "wrk_emailintelligence_workspace",
+      "modified": 1719240350000,
+      "created": 1719240350000,
+      "name": "Docker Environment",
+      "data": {
+        "base_url": "http://emailintelligence.api:8080",
+        "yarp_url": "http://yarp.apigateway:8080",
+        "processedEmailId": "",
+        "draftId": ""
+      },
+      "dataPropertyOrder": {
+        "&": [
+          "base_url",
+          "yarp_url",
+          "processedEmailId",
+          "draftId"
+        ]
+      },
+      "color": null,
+      "isPrivate": false,
+      "metaSortKey": 1719240350000,
+      "_type": "environment"
+    }
+  ]
+}

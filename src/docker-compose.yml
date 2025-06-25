@@ -9,9 +9,10 @@ services:
 
   distributedcache:
     image: redis
-
   orderdb:
     image: mcr.microsoft.com/mssql/server
+  emailintelligencedb:
+    image: postgres
 
   messagebroker:
     image: rabbitmq:management
@@ -33,12 +34,17 @@ services:
     build:
       context: .
       dockerfile: Services/Discount/Discount.Grpc/Dockerfile
-
   ordering.api:
     image: ${DOCKER_REGISTRY-}orderingapi
     build:
       context: .
       dockerfile: Services/Ordering/Ordering.API/Dockerfile
+
+  emailintelligence.api:
+    image: ${DOCKER_REGISTRY-}emailintelligenceapi
+    build:
+      context: .
+      dockerfile: Services/EmailIntelligence/EmailIntelligence.API/Dockerfile
 
   yarpapigateway:
     image: ${DOCKER_REGISTRY-}yarpapigateway
@@ -55,6 +61,7 @@ services:
 volumes:
   postgres_catalog:
   postgres_basket:
+  postgres_emailintelligence:
 
 
 

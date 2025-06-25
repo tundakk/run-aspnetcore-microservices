@@ -432,6 +432,330 @@
 					"response": []
 				}
 			]
+		},		{
+			"name": "EmailIntelligence",
+			"item": [
+				{
+					"name": "POST Process Email",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"EmailId\": \"email-001\",\n    \"UserId\": \"user-123\",\n    \"Subject\": \"URGENT: Server downtime scheduled for tonight\",\n    \"From\": \"admin@company.com\",\n    \"To\": \"team@company.com\",\n    \"Body\": \"Hi Team,\\n\\nWe have scheduled a critical server maintenance tonight from 11 PM to 3 AM. Please save your work and log off before 11 PM. This is urgent and cannot be postponed.\\n\\nThanks,\\nIT Admin\",\n    \"ReceivedAt\": \"2025-06-24T14:30:00Z\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{emailintelligence_url}}/emails/process",
+							"host": [
+								"{{emailintelligence_url}}"
+							],
+							"path": [
+								"emails",
+								"process"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "POST Process Marketing Email",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"EmailId\": \"email-002\",\n    \"UserId\": \"user-123\",\n    \"Subject\": \"50% Off Summer Sale - Don't Miss Out!\",\n    \"From\": \"marketing@store.com\",\n    \"To\": \"customer@email.com\",\n    \"Body\": \"Dear Valued Customer,\\n\\nOur biggest summer sale is here! Get 50% off on all items. Use code SUMMER50 at checkout. Sale ends soon!\\n\\nShop now and save big!\\n\\nBest regards,\\nMarketing Team\",\n    \"ReceivedAt\": \"2025-06-24T10:15:00Z\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{emailintelligence_url}}/emails/process",
+							"host": [
+								"{{emailintelligence_url}}"
+							],
+							"path": [
+								"emails",
+								"process"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "POST Process Meeting Request",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"EmailId\": \"email-003\",\n    \"UserId\": \"user-123\",\n    \"Subject\": \"Meeting Request: Q3 Budget Review\",\n    \"From\": \"manager@company.com\",\n    \"To\": \"team-leads@company.com\",\n    \"Body\": \"Hi Team Leads,\\n\\nI'd like to schedule a meeting to review our Q3 budget and discuss upcoming projects. Please let me know your availability for next week.\\n\\nProposed times:\\n- Tuesday 2 PM\\n- Wednesday 10 AM\\n- Thursday 3 PM\\n\\nPlease respond with your preference.\\n\\nBest,\\nSarah\",\n    \"ReceivedAt\": \"2025-06-24T09:45:00Z\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{emailintelligence_url}}/emails/process",
+							"host": [
+								"{{emailintelligence_url}}"
+							],
+							"path": [
+								"emails",
+								"process"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GET Filtered Emails - All",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{emailintelligence_url}}/emails/filtered?UserId=user-123&Page=1&PageSize=10",
+							"host": [
+								"{{emailintelligence_url}}"
+							],
+							"path": [
+								"emails",
+								"filtered"
+							],
+							"query": [
+								{
+									"key": "UserId",
+									"value": "user-123"
+								},
+								{
+									"key": "Page",
+									"value": "1"
+								},
+								{
+									"key": "PageSize",
+									"value": "10"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GET Filtered Emails - High Priority",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{emailintelligence_url}}/emails/filtered?UserId=user-123&Priority=2&Page=1&PageSize=10",
+							"host": [
+								"{{emailintelligence_url}}"
+							],
+							"path": [
+								"emails",
+								"filtered"
+							],
+							"query": [
+								{
+									"key": "UserId",
+									"value": "user-123"
+								},
+								{
+									"key": "Priority",
+									"value": "2",
+									"description": "High Priority (0=Low, 1=Medium, 2=High, 3=Critical)"
+								},
+								{
+									"key": "Page",
+									"value": "1"
+								},
+								{
+									"key": "PageSize",
+									"value": "10"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GET Filtered Emails - Requires Response",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{emailintelligence_url}}/emails/filtered?UserId=user-123&RequiresResponse=true&Page=1&PageSize=10",
+							"host": [
+								"{{emailintelligence_url}}"
+							],
+							"path": [
+								"emails",
+								"filtered"
+							],
+							"query": [
+								{
+									"key": "UserId",
+									"value": "user-123"
+								},
+								{
+									"key": "RequiresResponse",
+									"value": "true"
+								},
+								{
+									"key": "Page",
+									"value": "1"
+								},
+								{
+									"key": "PageSize",
+									"value": "10"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GET Filtered Emails - Meeting Category",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{emailintelligence_url}}/emails/filtered?UserId=user-123&Category=4&Page=1&PageSize=10",
+							"host": [
+								"{{emailintelligence_url}}"
+							],
+							"path": [
+								"emails",
+								"filtered"
+							],
+							"query": [
+								{
+									"key": "UserId",
+									"value": "user-123"
+								},
+								{
+									"key": "Category",
+									"value": "4",
+									"description": "Meeting Category (1=RequiresResponse, 2=Informational, 3=ActionRequired, 4=Meeting, 5=Support, 6=Marketing, 7=Newsletter, 8=Spam, 9=Personal, 10=Internal)"
+								},
+								{
+									"key": "Page",
+									"value": "1"
+								},
+								{
+									"key": "PageSize",
+									"value": "10"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "POST Generate Draft Response",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"ProcessedEmailId\": \"{{processedEmailId}}\",\n    \"UserId\": \"user-123\",\n    \"AdditionalContext\": \"Please keep the response professional and acknowledge the urgency. Mention that we will coordinate with the team.\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{emailintelligence_url}}/drafts/generate",
+							"host": [
+								"{{emailintelligence_url}}"
+							],
+							"path": [
+								"drafts",
+								"generate"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "PUT Edit Draft",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"UserId\": \"user-123\",\n    \"EditedContent\": \"Thank you for the notification about the server maintenance. I've informed my team and we'll ensure all work is saved before 11 PM tonight. We appreciate the advance notice and understand the critical nature of this maintenance.\\n\\nBest regards,\\nTeam Lead\",\n    \"EditTypes\": [\"tone\", \"content\"]\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{emailintelligence_url}}/drafts/{{draftId}}/edit",
+							"host": [
+								"{{emailintelligence_url}}"
+							],
+							"path": [
+								"drafts",
+								"{{draftId}}",
+								"edit"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Health Check",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{emailintelligence_url}}/health",
+							"host": [
+								"{{emailintelligence_url}}"
+							],
+							"path": [
+								"health"
+							]
+						}
+					},
+					"response": []
+				}
+			]
 		},
 		{
 			"name": "YarpApiGateway",
@@ -717,6 +1041,109 @@
 										"orders",
 										"customer",
 										"58c49479-ec65-4de2-86e7-033c546291aa"
+									]
+								}
+							},
+							"response": []						}
+					]
+				},
+				{
+					"name": "EmailIntelligence",
+					"item": [
+						{
+							"name": "POST Process Email",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"EmailId\": \"email-001\",\n    \"UserId\": \"user-123\",\n    \"Subject\": \"URGENT: Server downtime scheduled for tonight\",\n    \"From\": \"admin@company.com\",\n    \"To\": \"team@company.com\",\n    \"Body\": \"Hi Team,\\n\\nWe have scheduled a critical server maintenance tonight from 11 PM to 3 AM. Please save your work and log off before 11 PM. This is urgent and cannot be postponed.\\n\\nThanks,\\nIT Admin\",\n    \"ReceivedAt\": \"2025-06-24T14:30:00Z\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{yarp_url}}/emailintelligence-service/emails/process",
+									"host": [
+										"{{yarp_url}}"
+									],
+									"path": [
+										"emailintelligence-service",
+										"emails",
+										"process"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "GET Filtered Emails - All",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{yarp_url}}/emailintelligence-service/emails/filtered?UserId=user-123&Page=1&PageSize=10",
+									"host": [
+										"{{yarp_url}}"
+									],
+									"path": [
+										"emailintelligence-service",
+										"emails",
+										"filtered"
+									],
+									"query": [
+										{
+											"key": "UserId",
+											"value": "user-123"
+										},
+										{
+											"key": "Page",
+											"value": "1"
+										},
+										{
+											"key": "PageSize",
+											"value": "10"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "POST Generate Draft Response",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"ProcessedEmailId\": \"{{processedEmailId}}\",\n    \"UserId\": \"user-123\",\n    \"AdditionalContext\": \"Please keep the response professional and acknowledge the urgency.\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{yarp_url}}/emailintelligence-service/drafts/generate",
+									"host": [
+										"{{yarp_url}}"
+									],
+									"path": [
+										"emailintelligence-service",
+										"drafts",
+										"generate"
 									]
 								}
 							},

@@ -1,0 +1,51 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Docker .NET Attach (EmailIntelligence)",
+            "type": "docker",
+            "request": "attach",
+            "platform": "netCore",
+            "sourceFileMap": {
+                "/src": "${workspaceFolder}/src"
+            }
+        },
+        {
+            "name": "Debug EmailIntelligence (Local)",
+            "type": "coreclr",
+            "request": "launch",
+            "program": "${workspaceFolder}/src/Services/EmailIntelligence/EmailIntelligence.API/bin/Debug/net8.0/EmailIntelligence.API.dll",
+            "args": [],
+            "cwd": "${workspaceFolder}/src/Services/EmailIntelligence/EmailIntelligence.API",
+            "stopAtEntry": false,
+            "env": {
+                "ASPNETCORE_ENVIRONMENT": "Development",
+                "ASPNETCORE_HTTP_PORTS": "6006",
+                "ConnectionStrings__DefaultConnection": "Host=localhost:5434;Database=EmailIntelligenceDb;Username=postgres;Password=postgres;",
+                "MessageBroker__Host": "localhost",
+                "MessageBroker__UserName": "guest",
+                "MessageBroker__Password": "guest"
+            },
+            "console": "internalConsole",
+            "internalConsoleOptions": "openOnSessionStart",
+            "preLaunchTask": "🔨 Build EmailIntelligence"
+        },
+        {
+            "name": "Manual Docker Attach (EmailIntelligence)",
+            "type": "coreclr",
+            "request": "attach",
+            "processId": "${command:pickRemoteProcess}",
+            "pipeTransport": {
+                "pipeProgram": "docker",
+                "pipeArgs": ["exec", "-i", "src-emailintelligence.api-1"],
+                "debuggerPath": "/vsdbg/vsdbg",
+                "pipeCwd": "${workspaceFolder}",
+                "quoteArgs": false
+            },
+            "sourceFileMap": {
+                "/src": "${workspaceFolder}/src"
+            },
+            "justMyCode": false
+        }
+    ]
+}
