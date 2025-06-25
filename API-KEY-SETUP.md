@@ -4,6 +4,8 @@
 
 The EmailIntelligence service requires an OpenAI API key to function. For security reasons, the actual API key is not included in the repository.
 
+**🔒 Security Configuration:** Development appsettings files and docker-compose override files are now included in `.gitignore` to prevent accidentally committing sensitive configuration data.
+
 ## Setting Up Your API Key
 
 ### Method 1: Environment Variables (Recommended for Production)
@@ -48,3 +50,31 @@ For Azure deployment, configure the API key in:
 - Azure App Service Configuration
 - Azure Key Vault (recommended)
 - Environment variables in the deployment script
+
+## Git Security Configuration
+
+The following files are now included in `.gitignore` to prevent accidentally committing sensitive data:
+
+```gitignore
+# Development appsettings that may contain sensitive data
+**/appsettings.Development.json
+**/appsettings.Local.json
+**/appsettings.*.json
+!**/appsettings.json
+!**/appsettings.Production.json
+
+# Docker override files with sensitive environment variables
+docker-compose.override.yml
+
+# Environment files
+.env
+.env.local
+.env.development
+.env.production
+
+# API keys and secrets
+secrets.json
+*.secrets.json
+```
+
+This ensures that any development configuration files containing API keys or other sensitive data won't be accidentally committed to the repository.
