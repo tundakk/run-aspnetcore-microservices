@@ -5,7 +5,13 @@ services:
     container_name: catalogdb
     environment:
       - POSTGRES_USER=postgres
-      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_      - MessageBroker__Host=amqp://ecommerce-mq:5672
+      - MessageBroker__UserName=guest
+      - MessageBroker__Password=guest
+      - LLMSettings__ApiKey=your-openai-api-key-here
+      - LLMSettings__BaseUrl=https://api.openai.com
+      - LLMSettings__Model=gpt-3.5-turbo
+      - LLMSettings__MaxTokens=800D=postgres
       - POSTGRES_DB=CatalogDb
     restart: always
     ports:

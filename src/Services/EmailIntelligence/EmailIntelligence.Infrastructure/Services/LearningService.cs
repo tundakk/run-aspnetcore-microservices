@@ -1,3 +1,8 @@
+using EmailIntelligence.Application.Services;
+using EmailIntelligence.Domain.Entities;
+using EmailIntelligence.Domain.Repositories;
+using Microsoft.Extensions.Logging;
+
 namespace EmailIntelligence.Infrastructure.Services;
 
 public class LearningService(

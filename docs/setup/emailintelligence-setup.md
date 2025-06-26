@@ -170,9 +170,9 @@ netstat -ano | findstr :6006
 
 ## 📚 **Documentation Links**
 
-- **Complete Guide:** `EmailIntelligence-Docker-Debugging-Guide.md`
-- **API Collection:** `EmailIntelligence-Insomnia-Collection.json`
-- **Docker Config:** `src/docker-compose.override.yml`
+- **Complete Guide:** `../guides/debugging-guide.md`
+- **API Collection:** `../collections/insomnia-collection.json`
+- **Docker Config:** `../src/docker-compose.override.yml`
 
 ## 🎉 **Success Indicators**
 

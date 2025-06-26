@@ -1,5 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using EmailIntelligence.Domain.Entities;
+using Pgvector;
+using Pgvector.EntityFrameworkCore;
 
 namespace EmailIntelligence.Infrastructure.Data;
 
@@ -12,6 +14,8 @@ public class EmailIntelligenceDbContext : DbContext
     public DbSet<ProcessedEmail> ProcessedEmails { get; set; } = null!;
     public DbSet<EmailDraft> EmailDrafts { get; set; } = null!;
     public DbSet<UserToneProfile> UserToneProfiles { get; set; } = null!;
+    public DbSet<EmailEmbedding> EmailEmbeddings { get; set; } = null!;
+    public DbSet<LearningPattern> LearningPatterns { get; set; } = null!;
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -84,6 +88,60 @@ public class EmailIntelligenceDbContext : DbContext
             entity.Ignore(e => e.PreferredPhrases);
             entity.Ignore(e => e.AvoidedPhrases);
             entity.Ignore(e => e.WritingStyle);
-            entity.Ignore(e => e.EmailsSampled);        });
+            entity.Ignore(e => e.EmailsSampled);
+        });
+
+        // EmailEmbedding entity configuration
+        modelBuilder.Entity<EmailEmbedding>(entity =>
+        {
+            entity.ToTable("email_embeddings");
+            entity.HasKey(e => e.Id);
+            entity.Property(e => e.Id).HasColumnName("id");
+            entity.Property(e => e.EmailId).HasColumnName("email_id").IsRequired();
+            entity.Property(e => e.UserId).HasColumnName("user_id").IsRequired();
+            entity.Property(e => e.ContentType).HasColumnName("content_type").IsRequired();
+            entity.Property(e => e.Content).HasColumnName("content").IsRequired();
+            entity.Property(e => e.Embedding).HasColumnName("embedding").IsRequired();
+            entity.Property(e => e.Metadata)
+                .HasColumnName("metadata")
+                .HasColumnType("jsonb")
+                .HasConversion(
+                    v => System.Text.Json.JsonSerializer.Serialize(v, (System.Text.Json.JsonSerializerOptions?)null),
+                    v => System.Text.Json.JsonSerializer.Deserialize<Dictionary<string, object>>(v, (System.Text.Json.JsonSerializerOptions?)null) ?? new Dictionary<string, object>());
+            entity.Property(e => e.CreatedAt).HasColumnName("created_at").IsRequired();
+            entity.Property(e => e.UpdatedAt).HasColumnName("updated_at").IsRequired();
+            
+            entity.HasIndex(e => e.UserId).HasDatabaseName("ix_email_embeddings_user_id");
+            entity.HasIndex(e => e.EmailId).HasDatabaseName("ix_email_embeddings_email_id");
+            entity.HasIndex(e => e.ContentType).HasDatabaseName("ix_email_embeddings_content_type");
+            // Note: Vector index will be created in migration
+        });
+
+        // LearningPattern entity configuration
+        modelBuilder.Entity<LearningPattern>(entity =>
+        {
+            entity.ToTable("learning_patterns");
+            entity.HasKey(e => e.Id);
+            entity.Property(e => e.Id).HasColumnName("id");
+            entity.Property(e => e.UserId).HasColumnName("user_id").IsRequired();
+            entity.Property(e => e.PatternType).HasColumnName("pattern_type").IsRequired();
+            entity.Property(e => e.OriginalContent).HasColumnName("original_content").IsRequired();
+            entity.Property(e => e.ModifiedContent).HasColumnName("modified_content").IsRequired();
+            entity.Property(e => e.SemanticDifference).HasColumnName("semantic_difference").IsRequired();
+            entity.Property(e => e.Context)
+                .HasColumnName("context")
+                .HasColumnType("jsonb")
+                .HasConversion(
+                    v => System.Text.Json.JsonSerializer.Serialize(v, (System.Text.Json.JsonSerializerOptions?)null),
+                    v => System.Text.Json.JsonSerializer.Deserialize<Dictionary<string, object>>(v, (System.Text.Json.JsonSerializerOptions?)null) ?? new Dictionary<string, object>());
+            entity.Property(e => e.ConfidenceScore).HasColumnName("confidence_score").IsRequired();
+            entity.Property(e => e.UsageCount).HasColumnName("usage_count").IsRequired();
+            entity.Property(e => e.CreatedAt).HasColumnName("created_at").IsRequired();
+            entity.Property(e => e.LastUsedAt).HasColumnName("last_used_at").IsRequired();
+            
+            entity.HasIndex(e => e.UserId).HasDatabaseName("ix_learning_patterns_user_id");
+            entity.HasIndex(e => e.PatternType).HasDatabaseName("ix_learning_patterns_pattern_type");
+            entity.HasIndex(e => e.ConfidenceScore).HasDatabaseName("ix_learning_patterns_confidence_score");
+        });
     }
 }

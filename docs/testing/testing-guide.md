@@ -1,4 +1,4 @@
-# EmailIntelligence Service - Validation Error Resolution & Testing Guide
+# EmailIntelligence Service - Testing Guide
 
 ## 🔍 Issue Analysis
 The validation errors you encountered were due to:
@@ -109,5 +109,39 @@ curl -X POST "http://localhost:6006/drafts/generate" \
 - ✅ Validation: **Working** (proper error messages for missing fields)
 - ✅ YARP routing: **Working** (all endpoints accessible via gateway)
 - ✅ Health checks: **Working** (service and dependencies healthy)
+
+## 🧪 Complete Testing Checklist
+
+### Prerequisites
+- [ ] Docker Desktop running
+- [ ] All services started: `docker-compose up -d`
+- [ ] Import Insomnia collection from `/docs/collections/`
+- [ ] Verify health endpoints are responding
+
+### Basic Functionality Tests
+- [ ] Health check endpoint
+- [ ] Email processing with valid data
+- [ ] Email processing with invalid data (validation test)
+- [ ] Draft generation with valid ProcessedEmailId
+- [ ] Draft generation with invalid ProcessedEmailId
+
+### Integration Tests
+- [ ] API Gateway routing (YARP)
+- [ ] Database persistence
+- [ ] Message broker integration
+- [ ] AI service integration (OpenAI)
+
+### Performance Tests
+- [ ] Load testing with multiple concurrent requests
+- [ ] Response time measurement
+- [ ] Memory usage monitoring
+- [ ] Database query performance
+
+### Error Handling Tests
+- [ ] Invalid request formats
+- [ ] Missing required fields
+- [ ] Network connectivity issues
+- [ ] Database connectivity issues
+- [ ] AI service unavailable scenarios
 
 The EmailIntelligence service is fully operational and ready for AI-powered email processing and response generation!

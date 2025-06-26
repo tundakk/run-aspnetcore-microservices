@@ -1,3 +1,4 @@
+using EmailIntelligence.Application.Services;
 using EmailIntelligence.Infrastructure.Configuration;
 using EmailIntelligence.Infrastructure.Services;
 using EmailIntelligence.Infrastructure.Data;
@@ -6,6 +7,11 @@ using EmailIntelligence.Domain.Repositories;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.SemanticKernel.Connectors.OpenAI;
+using Microsoft.SemanticKernel;
+using Pgvector.EntityFrameworkCore;
+
+#pragma warning disable SKEXP0010 // Type is for evaluation purposes only and is subject to change or removal in future updates.
 
 namespace EmailIntelligence.Infrastructure;
 
@@ -19,24 +25,45 @@ public static class DependencyInjection
         services.Configure<LLMSettings>(
             configuration.GetSection(LLMSettings.SectionName));
 
-        // HTTP Client for LLM API
-        services.AddHttpClient<IEmailAnalysisService, EmailAnalysisService>(client =>
+        var llmSettings = configuration.GetSection(LLMSettings.SectionName).Get<LLMSettings>()!;
+
+        // Semantic Kernel Services
+        services.AddSingleton<Kernel>(serviceProvider =>
         {
-            var llmSettings = configuration.GetSection(LLMSettings.SectionName).Get<LLMSettings>()!;
-            client.BaseAddress = new Uri(llmSettings.BaseUrl);
-            client.Timeout = TimeSpan.FromSeconds(llmSettings.TimeoutSeconds);
-        });        services.AddHttpClient<IDraftGenerationService, DraftGenerationService>(client =>
+            var kernelBuilder = Kernel.CreateBuilder();
+            kernelBuilder.AddOpenAIChatCompletion(
+                llmSettings.Model,
+                llmSettings.ApiKey,
+                httpClient: new HttpClient { BaseAddress = new Uri(llmSettings.BaseUrl) });
+            return kernelBuilder.Build();
+        });
+
+        // OpenAI Embedding Service
+        services.AddSingleton<OpenAITextEmbeddingGenerationService>(serviceProvider =>
         {
-            var llmSettings = configuration.GetSection(LLMSettings.SectionName).Get<LLMSettings>()!;
-            client.BaseAddress = new Uri(llmSettings.BaseUrl);
-            client.Timeout = TimeSpan.FromSeconds(llmSettings.TimeoutSeconds);
+            return new OpenAITextEmbeddingGenerationService(
+                llmSettings.EmbeddingModel,
+                llmSettings.ApiKey,
+                httpClient: new HttpClient { BaseAddress = new Uri(llmSettings.BaseUrl) });
         });
 
         // Database
         services.AddDbContext<EmailIntelligenceDbContext>(options =>
-            options.UseNpgsql(configuration.GetConnectionString("Database")));
+        {
+            options.UseNpgsql(configuration.GetConnectionString("Database"), o =>
+            {
+                // Enable vector extension for PostgreSQL
+                o.UseVector();
+            });
+        });
 
-        // Application Services
+        // HTTP Clients
+        services.AddHttpClient<IDraftGenerationService, DraftGenerationService>();
+        services.AddHttpClient<ILearningService, LearningService>();
+
+        // Application Services  
+        services.AddScoped<ISemanticKernelService, SemanticKernelService>();
+        services.AddScoped<IEmbeddingService, EmbeddingService>();
         services.AddScoped<IEmailAnalysisService, EmailAnalysisService>();
         services.AddScoped<IDraftGenerationService, DraftGenerationService>();
         services.AddScoped<ILearningService, LearningService>();
@@ -45,6 +72,8 @@ public static class DependencyInjection
         services.AddScoped<IProcessedEmailRepository, ProcessedEmailRepository>();
         services.AddScoped<IEmailDraftRepository, EmailDraftRepository>();
         services.AddScoped<IUserToneProfileRepository, UserToneProfileRepository>();
+        services.AddScoped<IEmailEmbeddingRepository, EmailEmbeddingRepository>();
+        services.AddScoped<ILearningPatternRepository, LearningPatternRepository>();
 
         // Health Checks
         services.AddHealthChecks()

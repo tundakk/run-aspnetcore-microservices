@@ -1,4 +1,9 @@
+using EmailIntelligence.Application.Services;
+using EmailIntelligence.Domain.Entities;
+using EmailIntelligence.Application.Drafts.Commands.GenerateDraft;
 using EmailIntelligence.Infrastructure.Configuration;
+using Microsoft.Extensions.Options;
+using Microsoft.Extensions.Logging;
 using System.Text.Json;
 using System.Text;
 
